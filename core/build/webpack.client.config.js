@@ -1,15 +1,15 @@
 const webpack = require('webpack')
 const merge = require('webpack-merge')
 const base = require('./webpack.base.config')
-const vueConfig = require('./vue-loader.config')
 const HTMLPlugin = require('html-webpack-plugin')
 const SWPrecachePlugin = require('sw-precache-webpack-plugin')
 const path = require('path')
-
-const theme = require('../build/config.json').theme
-const themeRoot = '../../src/themes/' + theme + '/'
+const fs = require('fs')
+const themeDirectory = require('./theme-path')
+const themedIndex = path.join(themeDirectory, 'index.template.html')
 
 const config = merge(base, {
+  mode: 'development',
   resolve: {
     alias: {
       'create-api': './create-api-client.js'
@@ -18,28 +18,17 @@ const config = merge(base, {
   plugins: [
     // strip dev-only code in Vue source
     new webpack.DefinePlugin({
-      'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV || 'development'),
       'process.env.VUE_ENV': '"client"'
-    }),
-    // extract vendor chunks for better caching
-    new webpack.optimize.CommonsChunkPlugin({
-      name: 'vendor'
     }),
     // generate output HTML
     new HTMLPlugin({
-      template: 'src/index.template.html'
+      template: fs.existsSync(themedIndex) ? themedIndex : 'src/index.template.html'
     })
   ]
 })
 
 if (process.env.NODE_ENV === 'production') {
   config.plugins.push(
-    // minify JS
-    new webpack.optimize.UglifyJsPlugin({
-      compress: {
-        warnings: false
-      }
-    }),
     // auto generate service worker
     new SWPrecachePlugin({
       cacheId: 'vue-sfr',
@@ -49,58 +38,61 @@ if (process.env.NODE_ENV === 'production') {
         'dist/**.*',
         'assets/**.*',
         'assets/ig/**.*',
-        'index.html'
-      ],      
+        'index.html',
+        '/'
+      ],
       runtimeCaching: [
-       {
+        {
+          urlPattern: "^https://fonts\.googleapis\.com/", /** cache the html stub  */
+          handler: "cacheFirst"
+        },
+        {
+          urlPattern: "^https://fonts\.gstatic\.com/", /** cache the html stub  */
+          handler: "cacheFirst"
+        },
+        {
+          urlPattern: "^https://unpkg\.com/", /** cache the html stub  */
+          handler: "cacheFirst"
+        },
+        {
         urlPattern: "/pwa.html", /** cache the html stub  */
-        handler: "networkFirst"
+        handler: "fastest"
+      },{
+        urlPattern: "/", /** cache the html stub for homepage  */
+        handler: "fastest"
       },
       {
         urlPattern: "/p/*", /** cache the html stub  */
-        handler: "networkFirst"
+        handler: "fastest"
       },
       {
         urlPattern: "/c/*", /** cache the html stub  */
-        handler: "networkFirst"
+        handler: "fastest"
       },
       {
-        urlPattern: "/img/(.*)", 
+        urlPattern: "/img/(.*)",
         handler: "fastest"
       },{
-        urlPattern: "/api/*", 
-        handler: "cacheFirst"
+        urlPattern: "/api/catalog/*",
+        handler: "fastest"
+      },{
+        urlPattern: "/api/*",
+        handler: "networkFirst"
       },{
         urlPattern: "/assets/logo.svg",
-        handler: "cacheFirst"
+        handler: "networkFirst"
       },{
         urlPattern: "/index.html",
-        handler: "cacheFirst"
+        handler: "fastest"
       },{
         urlPattern: "/assets/*",
-        handler: "cacheFirst"
+        handler: "fastest"
       },{
         urlPattern: "/assets/ig/(.*)",
-        handler: "cacheFirst"
+        handler: "fastest"
       },{
         urlPattern: "/dist/(.*)",
-        handler: "cacheFirst"
-      },{
-        urlPattern:'/api/catalog/*', /** cache products catalog */
-        method: "post",
-        options: {
-          origin: 'http://localhost:8080',
-          debug: true
-        },
-        handler: "cacheFirst"        
-      },{
-        urlPattern:'/api/*', /** cache products catalog */
-        method: "post",
-        options: {
-          origin: 'https://demo.vuestorefront.io/',
-          debug: true
-        },
-        handler: "cacheFirst"        
+        handler: "fastest"
       }],
       "importScripts": ['/service-worker-ext.js'] /* custom logic */
     })
@@ -108,9 +100,10 @@ if (process.env.NODE_ENV === 'production') {
 }
 
 const configSW = merge({}, base); // this is basicaly a work-around to compile the service workers extensions as they are not included nowhere but in service worker only
+const themeRoot = require('./theme-path')
 
-configSW.entry =  {
-  'service-worker-ext': 'src/themes/' + theme + '/service-worker-ext.js',
+configSW.entry = {
+  'service-worker-ext': themeRoot + '/service-worker-ext.js',
 }
 configSW.output =  {
   path: path.resolve(__dirname, '../../dist'),

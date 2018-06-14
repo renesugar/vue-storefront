@@ -4,6 +4,8 @@
  * @param {String} attributeCode
  * @param {String} optionId - value to get label for
  */
+import toString from 'lodash-es/toString'
+
 export function optionLabel (state, { attributeKey, searchBy = 'code', optionId }) {
   let attrCache = state.labels[attributeKey]
 
@@ -17,7 +19,7 @@ export function optionLabel (state, { attributeKey, searchBy = 'code', optionId 
   let attr = state['list_by_' + searchBy][attributeKey]
   if (attr) {
     let opt = attr.options.find((op) => { // TODO: cache it in memory
-      if (parseInt(op.value) === parseInt(optionId)) {
+      if (toString(op.value) === toString(optionId)) {
         return op
       }
     }) // TODO: i18n support with multi website attribute names

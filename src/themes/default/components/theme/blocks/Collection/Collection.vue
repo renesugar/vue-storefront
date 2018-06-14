@@ -7,7 +7,7 @@
 </template>
 <script>
 import builder from 'bodybuilder'
-import ProductsSlider from 'theme/components/core/ProductsSlider.vue'
+import ProductsSlider from 'theme/components/core/ProductsSlider'
 
 export default {
   name: 'Collection',
@@ -29,7 +29,8 @@ export default {
     return {
       products: [],
       sliderConfig: {
-        perPage: 6,
+        perPage: 2,
+        perPageCustom: [[768, 6]],
         paginationEnabled: false,
         loop: true
       }

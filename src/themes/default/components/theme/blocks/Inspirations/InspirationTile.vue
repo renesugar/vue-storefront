@@ -1,10 +1,10 @@
 <template>
   <div class="inspiration-tile w-100">
     <router-link
-      :to="{ name: product.type_id + '-product', params: { parentSku: product.sku, slug: product.slug }}"
+      :to="localizedRoute({ name: product.type_id + '-product', params: { parentSku: product.sku, slug: product.slug }})"
     >
       <div class="product-image bg-cl-secondary">
-        <img :src="thumbnail" class="product-thumbnail"/>
+        <img :src="thumbnail" class="product-thumbnail">
       </div>
     </router-link>
   </div>

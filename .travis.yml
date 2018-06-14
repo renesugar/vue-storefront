@@ -1,5 +1,21 @@
 language: node_js
 node_js:
-  - "6"
-  - "7"
-script: npm run unit --single-run
+  - "8"
+
+cache:
+  yarn: true
+  directories:
+    - node_modules
+
+jobs:
+  include:
+    - stage: lint
+      script:
+        - yarn lint
+        # - yarn unit
+        - yarn build
+    - stage: e2e
+      if: branch IN (master, develop)
+      script:
+        - yarn installer:ci
+        # - yarn tests:e2e:ci

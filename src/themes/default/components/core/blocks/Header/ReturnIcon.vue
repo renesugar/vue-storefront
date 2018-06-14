@@ -1,13 +1,13 @@
 <template>
   <button type="button" class="inline-flex brdr-none" @click="goBack">
-    <i class="material-icons md-18">keyboard_backspace</i>
+    <i class="material-icons">keyboard_backspace</i>
   </button>
 </template>
 
 <script>
-import { coreComponent } from 'core/lib/themes'
+import ReturnIcon from 'core/components/blocks/Header/ReturnIcon'
 
 export default {
-  mixins: [coreComponent('blocks/Header/ReturnIcon')]
+  mixins: [ReturnIcon]
 }
 </script>

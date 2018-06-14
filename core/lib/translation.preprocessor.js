@@ -24,13 +24,12 @@ module.exports = function (options) {
       let baseName = path.posix.basename(file, extName)
       if (extName === '.csv') {
         let fileContent = fs.readFileSync(fullFileName, 'utf8')
-        console.log('Processing translation file: ' + fullFileName + ' => ' + baseName)
+        console.debug('Processing translation file: ' + fullFileName + ' => ' + baseName)
         coreMessages[baseName] = Object.assign(coreMessages[baseName] ? coreMessages[baseName] : {}, convertToObject(dsv.parseRows(fileContent)))
       }
     })
   })
   return {
-    code: JSON.stringify(coreMessages)
+    code: `module.exports = ${JSON.stringify(coreMessages)};`
   }
 }
-

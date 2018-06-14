@@ -1,99 +1,104 @@
 <template>
-  <footer :class="{ 'brdr-top-1 brdr-cl-secondary' : isCheckout }">
-    <newsletter class=" flex brdr-bottom brdr-cl-secondary" v-if="!isCheckout"/>
-    <div class="footer-links flex pt30 pb60 px40 bg-cl-secondary" v-if="!isCheckout">
+  <footer :class="{ 'brdr-top-1 brdr-cl-secondary': isCheckout }">
+    <newsletter class=" flex brdr-bottom-1 brdr-cl-secondary" v-if="!isCheckout"/>
+    <div
+      class="footer-links flex pt30 pb60 px40 bg-cl-secondary"
+      v-if="!isCheckout"
+    >
       <div class="container">
-        <div class="row center-xs">
-          <div class="row col-lg-7 col-md-8 col-xs-12 start-md between-md between-xs no-mobile">
-            <div>
+        <div class="row m0 center-xs between-md">
+          <div
+            class="row m0 col-lg-7 col-md-8 col-xs-12 start-md between-md between-xs no-mobile"
+          >
+            <div class="start-md">
               <h3 class="cl-accent weight-400">
                 {{ $t('Departments') }}
               </h3>
               <div class="mt15">
-                <router-link class="cl-secondary" to="/c/women-20" exact>
+                <router-link class="cl-secondary" :to="localizedRoute('/c/women-20')" exact>
                   {{ $t('Women fashion') }}
                 </router-link>
               </div>
               <div class="mt15">
-                <router-link class="cl-secondary" to="/c/men-11" exact>
+                <router-link class="cl-secondary" :to="localizedRoute('/c/men-11')" exact>
                   {{ $t("Men's fashion") }}
                 </router-link>
               </div>
               <div class="mt15">
-                <router-link class="cl-secondary" to="/" exact>
+                <router-link class="cl-secondary" :to="localizedRoute('/')" exact>
                   {{ $t('Kidswear') }}
                 </router-link>
               </div>
               <div class="mt15">
-                <router-link class="cl-secondary" to="/" exact>
+                <router-link class="cl-secondary" :to="localizedRoute('/')" exact>
                   {{ $t('Home') }}
                 </router-link>
               </div>
             </div>
-            <div>
+            <div class="start-md">
               <h3 class="cl-accent weight-400">
                 {{ $t('Orders') }}
               </h3>
               <div class="mt15">
-                <router-link class="cl-secondary" to="/order-tracking" exact>
+                <router-link class="cl-secondary" :to="localizedRoute('/order-tracking')" exact>
                   {{ $t('Track my order') }}
                 </router-link>
               </div>
               <div class="mt15">
-                <router-link class="cl-secondary" to="/my-account" exact>
+                <router-link class="cl-secondary" :to="localizedRoute('/my-account')" exact>
                   {{ $t('My account') }}
                 </router-link>
               </div>
               <div class="mt15">
-                <router-link class="cl-secondary" to="/delivery" exact>
+                <router-link class="cl-secondary" :to="localizedRoute('/delivery')" exact>
                   {{ $t('Delivery') }}
                 </router-link>
               </div>
               <div class="mt15">
-                <router-link class="cl-secondary" to="/returns" exact>
+                <router-link class="cl-secondary" :to="localizedRoute('/returns')" exact>
                   {{ $t('Return policy') }}
                 </router-link>
               </div>
             </div>
-            <div>
+            <div class="start-md">
               <h3 class="cl-accent weight-400">
                 {{ $t('Help') }}
               </h3>
               <div class="mt15">
-                <router-link class="cl-secondary" to="/customer-service" exact>
+                <router-link class="cl-secondary" :to="localizedRoute('/customer-service')" exact>
                   {{ $t('Customer service') }}
                 </router-link>
               </div>
               <div class="mt15">
-                <router-link class="cl-secondary" to="/size-guide" exact>
+                <router-link class="cl-secondary" :to="localizedRoute('/size-guide')" exact>
                   {{ $t('Size guide') }}
                 </router-link>
               </div>
               <div class="mt15">
-                <router-link class="cl-secondary" to="/contact" exact>
+                <router-link class="cl-secondary" :to="localizedRoute('/contact')" exact>
                   {{ $t('Contact us') }}
                 </router-link>
               </div>
             </div>
-            <div>
+            <div class="start-md">
               <h3 class="cl-accent weight-400">
                 {{ $t('About us') }}
               </h3>
               <div class="mt15">
-                <router-link class="cl-secondary" to="/about-us" exact>
+                <router-link class="cl-secondary" :to="localizedRoute('/about-us')" exact>
                   {{ $t('About us') }}
                 </router-link>
               </div>
               <div class="mt15">
-                <router-link class="cl-secondary" to="/store-locator" exact>
+                <router-link class="cl-secondary" :to="localizedRoute('/store-locator')" exact>
                   {{ $t('Store locator') }}
                 </router-link>
               </div>
             </div>
           </div>
-          <div class="row social col-lg-5 col-md-4 mt30 center-xs end-xs">
+          <div class="row social mt30">
             <a
-              class="social-icon ml20 brdr-circle no-underline"
+              class="social-icon mx10 brdr-circle no-underline"
               href="https://www.facebook.com/"
               :aria-label="$t('Go to Facebook')"
             >
@@ -102,7 +107,7 @@
               </svg>
             </a>
             <a
-              class="social-icon ml20 brdr-circle no-underline"
+              class="social-icon mx10 brdr-circle no-underline"
               href="https://www.instagram.com"
               :aria-label="$t('Go to Instagram')"
             >
@@ -113,7 +118,7 @@
               </svg>
             </a>
             <a
-              class="social-icon ml20 brdr-circle no-underline"
+              class="social-icon mx10 brdr-circle no-underline"
               href="https://www.pinterest.com"
               :aria-label="$t('Go to Pinterest')"
             >
@@ -122,7 +127,7 @@
               </svg>
             </a>
             <a
-              class="social-icon ml20 brdr-circle no-underline"
+              class="social-icon mx10 brdr-circle no-underline"
               href="https://www.youtube.com"
               :aria-label="$t('Go to Youtube')"
             >
@@ -138,7 +143,7 @@
     <div class="container">
       <div class="row middle-xs px15 bottom-links">
         <div class="col-xs-5 col-sm-3 cl-tertiary">
-          {{ $t('United States (US)') }}
+          <language-switcher v-if="multistoreEnabled" />
         </div>
         <div class="col-xs col-sm-9 end-xs">
           <ul class="pl0 links">
@@ -168,10 +173,13 @@
 </template>
 
 <script>
-import { coreComponent } from 'core/lib/themes'
-import Newsletter from './Newsletter.vue'
+import LanguageSwitcher from '../../LanguageSwitcher.vue'
+import Footer from 'core/components/blocks/Footer/Footer'
+import Newsletter from 'theme/components/core/blocks/Footer/Newsletter'
+import config from 'config'
 
 export default {
+  mixins: [Footer],
   data () {
     return {
       isCheckout: false
@@ -180,6 +188,11 @@ export default {
   created () {
     if (this.$route.path === '/checkout') {
       this.isCheckout = true
+    }
+  },
+  computed: {
+    multistoreEnabled () {
+      return config.storeViews.multistore
     }
   },
   watch: {
@@ -192,9 +205,9 @@ export default {
     }
   },
   components: {
-    Newsletter
-  },
-  mixins: [coreComponent('blocks/Footer/Footer')]
+    Newsletter,
+    LanguageSwitcher
+  }
 }
 </script>
 
@@ -257,10 +270,6 @@ $color-secondary: color(secondary);
 
   .social {
     margin-top: 0;
-  }
-
-  .social-icon:first-of-type {
-    margin-left: 0;
   }
 
   .footer-links {

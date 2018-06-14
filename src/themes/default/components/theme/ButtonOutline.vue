@@ -1,11 +1,13 @@
 <template>
   <component
     :is="link ? 'router-link' : 'button'"
-    :to="link"
-    class="button-outline no-outline px40 py15 bg-cl-transparent uppercase h4 no-underline"
+    :to="localizedRoute(link)"
+    class="button-outline no-outline py15 bg-cl-transparent h4 no-underline sans-serif fs-medium"
     :class="{
       light : color === 'light', 'brdr-white' : color === 'light', 'cl-white' : color === 'light',
       dark : color === 'dark', 'brdr-darkgray' : color === 'dark', 'cl-secondary' : color === 'dark',
+      px0 : link ? true : false,
+      px40 : link ? false : true
     }"
   >
     <slot>
@@ -16,6 +18,7 @@
 
 <script>
 import focusClean from 'theme/components/theme/directives/focusClean'
+
 export default {
   name: 'ButtonOutline',
   directives: { focusClean },
@@ -42,9 +45,9 @@ export default {
 
   .button-outline {
     border: 2px solid;
+    min-width: 250px;
   }
   .dark {
-    font-weight: 200;
     border: 1px solid $dark-border;
     &:hover,
     &:focus {

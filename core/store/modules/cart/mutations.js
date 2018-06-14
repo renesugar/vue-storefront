@@ -1,6 +1,6 @@
 import * as types from '../../mutation-types'
-import EventBus from 'core/plugins/event-bus'
-import config from 'config'
+import EventBus from '../../lib/event-bus'
+import config from '../../lib/config'
 
 export default {
   /**
@@ -26,7 +26,7 @@ export default {
   },
   [types.CART_DEL_ITEM] (state, { product }) {
     EventBus.$emit('cart-before-delete', { items: state.cartItems })
-    state.cartItems = state.cartItems.filter(p => p.sku !== product.sku)
+    state.cartItems = state.cartItems.filter(p => p.sku !== product.sku && p.parentSku !== product.sku)
     EventBus.$emit('cart-after-delete', { items: state.cartItems })
     state.cartSavedAt = new Date()
   },
@@ -49,9 +49,8 @@ export default {
     }
     state.cartSavedAt = new Date()
   },
-  [types.CART_UPD_SHIPPING] (state, { shippingMethod, shippingCost }) {
-    state.shipping.cost = shippingCost
-    state.shipping.code = shippingMethod
+  [types.CART_UPD_SHIPPING] (state, shippingMethod) {
+    state.shipping = shippingMethod
     state.cartSavedAt = new Date()
   },
   [types.CART_LOAD_CART] (state, storedItems) {
@@ -62,6 +61,7 @@ export default {
     EventBus.$emit('order/PROCESS_QUEUE', { config: config }) // process checkout queue
     EventBus.$emit('sync/PROCESS_QUEUE', { config: config }) // process checkout queue
     EventBus.$emit('application-after-loaded')
+    EventBus.$emit('cart-after-loaded')
   },
   [types.CART_LOAD_CART_SERVER_TOKEN] (state, token) {
     state.cartServerToken = token
@@ -71,5 +71,9 @@ export default {
     state.platformTotals = totals
     state.platformTotalSegments = platformTotalSegments
     EventBus.$emit('cart-after-updatetotals', { platformTotals: totals, platformTotalSegments: platformTotalSegments })
+  },
+  [types.CART_UPD_PAYMENT] (state, paymentMethod) {
+    state.payment = paymentMethod
+    state.cartSavedAt = new Date()
   }
 }

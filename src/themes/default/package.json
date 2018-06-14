@@ -1,10 +1,11 @@
 {
-  "name": "vue-storefront-default-theme",
-  "version": "1.0.0",
+  "name": "@vue-storefront/theme-default",
+  "version": "1.0.4",
   "description": "Default theme for Vue Storefront",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "cd ../../../ && node core/scripts/server"
   },
   "author": "pkarw <pkarwatka@divante.pl> and contributors",
   "license": "MIT",
@@ -15,5 +16,8 @@
     "vue-no-ssr": "^0.2.2",
     "vuelidate": "^0.6.1",
     "vuex": "^3.0.1"
+  },
+  "publishConfig": {
+    "access": "public"
   }
 }

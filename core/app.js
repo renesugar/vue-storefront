@@ -1,22 +1,47 @@
+import union from 'lodash-es/union'
 import Vue from 'vue'
-import App from 'theme/app'
-import store from 'core/store'
+import App from 'theme/App'
+import store from '@vue-storefront/store'
 import router from 'core/router'
 import config from 'config'
-
+import appExtend from 'theme/app-extend'
 import { sync } from 'vuex-router-sync'
+import themeModules from 'theme/store'
+import EventBus from 'core/plugins/event-bus'
 
 import { registerTheme, plugins, mixins, filters } from 'core/lib/themes'
-import { registerExtensions } from 'core/lib/extensions'
+import registerExtensions from 'core/lib/extensions'
+import extensionEntryPoints from 'src/extensions'
+import themeExtensionEntryPoints from 'theme/extensions'
+import VueObserveVisibility from 'vue-observe-visibility'
 
 import VueLazyload from 'vue-lazyload'
 import Vuelidate from 'vuelidate'
+import Meta from 'vue-meta'
 import i18n from 'core/lib/i18n'
+import VueOffline from 'vue-offline'
+import shippingMethods from 'core/resource/shipping_methods.json'
+import { prepareStoreView } from './store/lib/multistore'
+
+if (!global.$VS) global.$VS = {}
+
+global.$VS.version = '1.0.4'
+
+if (themeModules) {
+  for (const moduleName of Object.keys(themeModules)) {
+    console.log('Registering custom, theme Vuex store as module', moduleName)
+    store.registerModule(moduleName, themeModules[moduleName])
+  }
+}
+const storeView = prepareStoreView(null, config, i18n, EventBus) // prepare the default storeView
+global.$VS.storeView = storeView
+store.state.shipping.methods = shippingMethods
 
 Vue.use(Vuelidate)
-Vue.use(VueLazyload, {
-  attempt: 2
-})
+Vue.use(VueLazyload, {attempt: 2})
+Vue.use(Meta)
+Vue.use(VueOffline)
+Vue.use(VueObserveVisibility)
 
 const pluginsObject = plugins()
 Object.keys(pluginsObject).forEach(function (key) {
@@ -33,6 +58,8 @@ Object.keys(filtersObject).forEach(key => {
   Vue.filter(key, filtersObject[key])
 })
 
+appExtend(Vue)
+
 export function createApp () {
   sync(store, router)
   const app = new Vue({
@@ -42,23 +69,23 @@ export function createApp () {
     render: h => h(App)
   })
 
-  registerExtensions(config.registeredExtensions || [], app, router, store, config) // TODO: use config or ENV variables
+  registerExtensions(
+    union(extensionEntryPoints, themeExtensionEntryPoints),
+    app,
+    router,
+    store,
+    config
+  )
+
   registerTheme(config.theme, app, router, store)
 
   app.$emit('application-after-init', app)
 
   if (config.demomode === true) {
-    global.__DEMO_MODE__ = true
+    global.$VS.__DEMO_MODE__ = true
   } else {
-    global.__DEMO_MODE__ = false
+    global.$VS.__DEMO_MODE__ = false
   }
-
-  global.__VERSION__ = '0.2.0'
-  global.__CONFIG__ = config
-  global.__TAX_COUNTRY__ = config.tax.defaultCountry || 'PL'
-  global.__TAX_REGION__ = config.tax.defaultRegion || ''
-  global.__I18N_COUNTRY__ = config.i18n.defaultCountry || 'US'
-  global.__I18N_LANG__ = config.i18n.defaultLanguage || 'EN'
 
   return { app, router, store }
 }

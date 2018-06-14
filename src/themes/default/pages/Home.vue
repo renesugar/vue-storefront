@@ -30,33 +30,34 @@
 </template>
 
 <script>
-import { corePage } from 'core/lib/themes'
+// 3rd party dependecies
 import builder from 'bodybuilder'
 
-// Base components overwrite
-import MainSlider from '../components/core/blocks/MainSlider/MainSlider.vue'
-// import ProductTile from '../components/core/ProductTile.vue'
-import ProductListing from '../components/core/ProductListing.vue'
+// Core dependecies
+import config from 'config'
 
-import PromotedOffers from '../components/theme/blocks/PromotedOffers/PromotedOffers.vue'
-import TileLinks from '../components/theme/blocks/TileLinks/TileLinks.vue'
-import Collection from '../components/theme/blocks/Collection/Collection'
-import Onboard from '../components/theme/blocks/Home/Onboard.vue'
+// Core pages
+import Home from 'core/pages/Home'
+
+// Theme core components
+import ProductListing from 'theme/components/core/ProductListing'
+import MainSlider from 'theme/components/core/blocks/MainSlider/MainSlider'
+
+// Theme local components
+import Collection from 'theme/components/theme/blocks/Collection/Collection'
+import Onboard from 'theme/components/theme/blocks/Home/Onboard'
+import PromotedOffers from 'theme/components/theme/blocks/PromotedOffers/PromotedOffers'
+import TileLinks from 'theme/components/theme/blocks/TileLinks/TileLinks'
 
 export default {
-  created () {
-    // Load personal and shipping details for Checkout page from IndexedDB
-    this.$store.dispatch('checkout/load')
-  },
-  beforeMount () {
-    if (global.__DEMO_MODE__) {
-      this.$store.dispatch('claims/check', { claimCode: 'onboardingAccepted' }).then((onboardingClaim) => {
-        if (!onboardingClaim) { // show onboarding info
-          this.$bus.$emit('modal-toggle', 'modal-onboard')
-          this.$store.dispatch('claims/set', { claimCode: 'onboardingAccepted', value: true })
-        }
-      })
-    }
+  mixins: [Home],
+  components: {
+    Collection,
+    MainSlider,
+    Onboard,
+    ProductListing,
+    PromotedOffers,
+    TileLinks
   },
   computed: {
     categories () {
@@ -69,16 +70,31 @@ export default {
       return this.$store.state.homepage.coolbags_collection
     }
   },
+  created () {
+    // Load personal and shipping details for Checkout page from IndexedDB
+    this.$store.dispatch('checkout/load')
+  },
+  beforeMount () {
+    if (global.$VS.__DEMO_MODE__) {
+      this.$store.dispatch('claims/check', { claimCode: 'onboardingAccepted' }).then((onboardingClaim) => {
+        if (!onboardingClaim) { // show onboarding info
+          this.$bus.$emit('modal-toggle', 'modal-onboard')
+          this.$store.dispatch('claims/set', { claimCode: 'onboardingAccepted', value: true })
+        }
+      })
+    }
+  },
   asyncData ({ store, route }) { // this is for SSR purposes to prefetch data
     return new Promise((resolve, reject) => {
       console.log('Entering asyncData for Home ' + new Date())
-      let newProductsQuery = builder().query('match', 'category.name', 'Tees').andFilter('range', 'visibility', { 'gte': 3, 'lte': 4 }/** Magento visibility in search & categories */).build()
-      let coolBagsQuery = builder().query('match', 'category.name', 'Women').andFilter('range', 'visibility', { 'gte': 3, 'lte': 4 }/** Magento visibility in search & categories */).build()
-      store.dispatch('category/list', {}).then((categories) => {
+      let newProductsQuery = builder().query('match', 'category.name', 'Tees').andFilter('range', 'visibility', { 'gte': 2, 'lte': 4 }/** Magento visibility in search & categories */).build()
+      let coolBagsQuery = builder().query('match', 'category.name', 'Women').andFilter('range', 'visibility', { 'gte': 2, 'lte': 4 }/** Magento visibility in search & categories */).build()
+      store.dispatch('category/list', { includeFields: config.entities.optimize ? config.entities.category.includeFields : null }).then((categories) => {
         store.dispatch('product/list', {
           query: newProductsQuery,
           size: 8,
-          sort: 'created_at:desc'
+          sort: 'created_at:desc',
+          includeFields: config.entities.optimize ? config.entities.productList.includeFields : []
         }).then(function (res) {
           if (res) {
             store.state.homepage.new_collection = res.items
@@ -87,7 +103,8 @@ export default {
           store.dispatch('product/list', {
             query: coolBagsQuery,
             size: 4,
-            sort: 'created_at:desc'
+            sort: 'created_at:desc',
+            includeFields: config.entities.optimize ? config.entities.productList.includeFields : []
           }).then(function (res) {
             if (res) {
               store.state.homepage.coolbags_collection = res.items
@@ -97,16 +114,7 @@ export default {
         })
       })
     })
-  },
-  components: {
-    ProductListing,
-    MainSlider,
-    PromotedOffers,
-    TileLinks,
-    Collection,
-    Onboard
-  },
-  mixins: [corePage('Home')]
+  }
 }
 </script>
 

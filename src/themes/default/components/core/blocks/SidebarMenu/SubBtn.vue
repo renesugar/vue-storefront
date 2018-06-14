@@ -1,10 +1,24 @@
 <template>
-  <span @click.stop="next()" v-if="type === 'next'">
-    <i class="material-icons p15 pointer">keyboard_arrow_right</i>
-  </span>
-  <span @click.stop="back()" v-else>
-    <i class="material-icons p15 pointer">keyboard_arrow_left</i>
-  </span>
+  <button
+    class="inline-flex between-xs w-100 px25 py20 pr15 serif cl-accent"
+    v-if="type === 'next'"
+    type="button"
+    @click.stop="next()"
+    :aria-label="$t('Show subcategories')"
+  >
+    {{ name }}
+    <i class="material-icons">keyboard_arrow_right</i>
+  </button>
+  <button
+    class="inline-flex p15 between-xs"
+    v-else
+    type="button"
+    @click.stop="back()"
+    :aria-label="$t('Back')"
+  >
+    {{ name }}
+    <i class="material-icons">keyboard_arrow_left</i>
+  </button>
 </template>
 <script>
 import { mapState } from 'vuex'
@@ -18,6 +32,10 @@ export default {
     type: {
       type: String,
       default: 'next'
+    },
+    name: {
+      type: String,
+      default: ''
     }
   },
   computed: {
@@ -40,3 +58,23 @@ export default {
   }
 }
 </script>
+<style lang="scss" scoped>
+@import '~theme/css/variables/colors';
+@import '~theme/css/helpers/functions/color';
+$color-gray: color(gainsboro);
+$color-black: color(matterhorn);
+
+button {
+  i {
+    color: $color-gray;
+    font-size: 28px;
+    line-height: 24px;
+  }
+  &:hover,
+  &:focus {
+    i {
+      color: $color-black;
+    }
+  }
+}
+</style>
