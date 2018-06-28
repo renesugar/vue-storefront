@@ -1,6 +1,6 @@
 # Vue Storefront - headless PWA for eCommerce 
 <a href="https://travis-ci.org/DivanteLtd/vue-storefront"><img src="https://travis-ci.org/DivanteLtd/vue-storefront.svg?branch=master" alt="build:passed"></a> 
-![version](https://img.shields.io/badge/version-1.0-blue.svg) 
+[![npm version](https://badge.fury.io/js/vue-storefront.svg)](https://badge.fury.io/js/vue-storefront)
 ![version](https://img.shields.io/badge/node-v8.x-blue.svg) 
 ![Branch stable](https://img.shields.io/badge/stable%20branch-master-blue.svg) 
 ![Branch Develop](https://img.shields.io/badge/dev%20branch-develop-blue.svg)
@@ -416,19 +416,19 @@ Vue Storefront is a Community effort brought to You by our great Core Team and s
         </a>
       </td>
       <td align="center" valign="middle">
-        <a href="">
+        <a href="https://magebit.com/">
           <img
-            src=""
-            alt=""
+            src="https://divante.co/partners/Vue-Storefront/Magebit_150px.png"
+            alt="MageBit"
             height="50"
           >
         </a>
       </td>
       <td align="center" valign="middle">
-        <a href="">
+        <a href="https://webvisum.de/">
           <img
-            src=""
-            alt=""
+            src="https://divante.co/partners/Vue-Storefront/Webvisium-Logo.png"
+            alt="WebVisum"
             height="50"
           >
         </a>
